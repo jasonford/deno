@@ -39,6 +39,7 @@ const {
 import { InnerBody } from "ext:deno_fetch/22_body.js";
 import { Event, setEventTargetData } from "ext:deno_web/02_event.js";
 import { BlobPrototype } from "ext:deno_web/09_file.js";
+import { headerListFromHeaders, headersFromHeaderList } from "ext:deno_fetch/20_headers.js";
 import {
   fromInnerResponse,
   newInnerResponse,
@@ -458,7 +459,11 @@ function upgradeWebSocket(request, options = {}) {
   }
 
   if (options.headers) {
-    for (const h of options.headers) {
+    const headers = headersFromHeaderList(
+      headerListFromHeaders(options.headers),
+      'response'
+    );
+    for (const h of headers) {
       ArrayPrototypePush(r.headerList, [h[0], h[1]]);
     }
   }
